@@ -1,0 +1,8 @@
+import math
+
+class Solution(object):
+    def poorPigs(self, buckets, minutesToDie, minutesToTest):
+        rounds = minutesToTest // minutesToDie
+        states = rounds + 1
+        
+        return int(math.ceil(math.log(buckets, states) - 1e-10))
