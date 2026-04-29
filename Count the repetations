@@ -1,0 +1,27 @@
+class Solution(object):
+    def getMaxRepetitions(self, s1, n1, s2, n2):
+        memo = {}
+        s1_count, s2_count, s2_idx = 0, 0, 0
+        
+        while s1_count < n1:
+            s1_count += 1
+            for char in s1:
+                if char == s2[s2_idx]:
+                    s2_idx += 1
+                    if s2_idx == len(s2):
+                        s2_count += 1
+                        s2_idx = 0
+            
+            if s2_idx in memo:
+                prev_s1, prev_s2 = memo[s2_idx]
+                cycle_s1 = s1_count - prev_s1
+                cycle_s2 = s2_count - prev_s2
+                
+                num_cycles = (n1 - s1_count) // cycle_s1
+                s1_count += num_cycles * cycle_s1
+                s2_count += num_cycles * cycle_s2
+                memo = {}
+            else:
+                memo[s2_idx] = (s1_count, s2_count)
+        
+        return s2_count // n2
