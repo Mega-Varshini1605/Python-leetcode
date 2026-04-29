@@ -1,0 +1,24 @@
+class Solution(object):
+    def smallestGoodBase(self, n):
+        n = int(n)
+        
+        for m in range(int(math.log(n, 2)), 1, -1):
+            # Binary search panni k-va kandupidikkirom
+            low = 2
+            high = int(n**(1.0/m))
+            
+            while low <= high:
+                mid = (low + high) // 2
+                # Geometric series sum: (mid**(m+1) - 1) / (mid - 1)
+                total = 0
+                for i in range(m + 1):
+                    total = total * mid + 1
+                
+                if total == n:
+                    return str(mid)
+                elif total < n:
+                    low = mid + 1
+                else:
+                    high = mid - 1
+        
+        return str(n - 1)
