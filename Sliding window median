@@ -1,0 +1,51 @@
+import heapq
+
+class Solution(object):
+    def medianSlidingWindow(self, nums, k):
+        small, large = [], []
+        delayed = {}
+
+        def balance():
+            while small and small[0][1] in delayed:
+                val, idx = heapq.heappop(small)
+                delayed[idx] -= 1
+                if delayed[idx] == 0: del delayed[idx]
+            while large and large[0][1] in delayed:
+                val, idx = heapq.heappop(large)
+                delayed[idx] -= 1
+                if delayed[idx] == 0: del delayed[idx]
+
+        for i in range(k):
+            heapq.heappush(small, (-nums[i], i))
+        for _ in range(k // 2):
+            val, idx = heapq.heappop(small)
+            heapq.heappush(large, (-val, idx))
+
+        res = []
+        if k % 2 == 1: res.append(float(-small[0][0]))
+        else: res.append((-small[0][0] + large[0][0]) / 2.0)
+
+        for i in range(k, len(nums)):
+            prev_idx = i - k
+            balance_factor = -1 if nums[prev_idx] <= -small[0][0] else 1
+            delayed[prev_idx] = delayed.get(prev_idx, 0) + 1
+
+            if nums[i] <= -small[0][0]:
+                balance_factor += 1
+                heapq.heappush(small, (-nums[i], i))
+            else:
+                balance_factor -= 1
+                heapq.heappush(large, (nums[i], i))
+
+            if balance_factor < 0:
+                val, idx = heapq.heappop(large)
+                heapq.heappush(small, (-val, idx))
+            elif balance_factor > 0:
+                val, idx = heapq.heappop(small)
+                heapq.heappush(large, (-val, idx))
+
+            balance()
+            if k % 2 == 1: res.append(float(-small[0][0]))
+            else: res.append((-small[0][0] + large[0][0]) / 2.0)
+
+        return res
