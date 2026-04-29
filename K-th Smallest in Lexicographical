@@ -1,0 +1,26 @@
+class Solution(object):
+    def findKthNumber(self, n, k):
+        def get_steps(curr, n):
+            steps = 0
+            first, last = curr, curr
+            while first <= n:
+                steps += min(n, last) - first + 1
+                first *= 10
+                last = last * 10 + 9
+            return steps
+
+        curr = 1
+        k -= 1 # 1st number-a 1-nu start panradhala k-va koraikirom
+        
+        while k > 0:
+            steps = get_steps(curr, n)
+            if steps <= k:
+                # Target indha tree-kulla illa, so adutha sibling-ku porom
+                curr += 1
+                k -= steps
+            else:
+                # Target indha tree-kulla irukku, so adutha level-ku (child) porom
+                curr *= 10
+                k -= 1
+                
+        return curr
