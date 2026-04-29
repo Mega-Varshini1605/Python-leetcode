@@ -1,0 +1,17 @@
+class Solution(object):
+    def numberOfArithmeticSlices(self, nums):
+        n = len(nums)
+        total_count = 0
+        dp = [{} for _ in range(n)]
+        
+        for i in range(n):
+            for j in range(i):
+                diff = nums[i] - nums[j]
+                
+                count_at_j = dp[j].get(diff, 0)
+                
+                dp[i][diff] = dp[i].get(diff, 0) + count_at_j + 1
+                
+                total_count += count_at_j
+                
+        return total_count
