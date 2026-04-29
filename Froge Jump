@@ -1,0 +1,25 @@
+class Solution(object):
+    def canCross(self, stones):
+        stone_set = set(stones)
+        target = stones[-1]
+        visited = set()
+        
+        stack = [(0, 0)]
+        
+        while stack:
+            curr, k = stack.pop()
+            
+            if curr == target:
+                return True
+            
+            if (curr, k) in visited:
+                continue
+            visited.add((curr, k))
+            
+            for step in [k - 1, k, k + 1]:
+                if step > 0:
+                    next_stone = curr + step
+                    if next_stone in stone_set:
+                        stack.append((next_stone, step))
+                        
+        return False
